@@ -84,5 +84,4 @@ class Task {
     public function getAvailableActions($status){
         return self::AVAILABLE_ACTIONS[$status];
     }
-
 }
