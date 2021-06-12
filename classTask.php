@@ -1,7 +1,6 @@
 <?php
 
 class Task {
-
     private $status;
     private $owner;
     private $freelancer;
