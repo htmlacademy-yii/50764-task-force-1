@@ -1,9 +1,10 @@
 <?php
 
-class Task {
-    private $status;
-    private $owner;
-    private $freelancer;
+class Task 
+{
+    private string $status;
+    private int    $owner;
+    private int    $freelancer;
 
     // all possible states & actions
     const STATUS_NEW        = 'new';
@@ -16,71 +17,64 @@ class Task {
     const ACTION_RESPOND    = 'respond'; // исполнитель откликнулся
     const ACTION_COMPLETE   = 'complete'; // заказчик принял
     const ACTION_REFUSE     = 'refuse'; // исполнитель отказался
-
-    // Карта — это ассоциативный массив, где ключ — внутреннее имя, 
-    //а значение — названия статуса/действия на русском.
     
-    // карта статусов
-    const STATUS_MAP = [
-        self::STATUS_NEW = 'Новое';
-        self::STATUS_CANCEL = 'Отменено';
-        self::STATUS_INPROGRESS = 'В работе';
-        self::STATUS_COMPLETE = 'Выполнено';
-        self::STATUS_FAILED = 'Провалено';
-    ];
-    
-    // карта действий
-    const ACTION_MAP = [
-        self::ACTION_PUBLISH = 'Опубликовать';
-        self::ACTION_CANCEL = 'Отменить';
-        self::ACTION_RESPOND = 'Откликнуться';
-        self::ACTION_COMPLETE = 'Принять';
-        self::ACTION_REFUSE = 'Отказаться';
-    ];
-
-    // класс имеет методы для возврата «карты» статусов и действий.
-    // сюда надо параметр передавать? Чтобы вернуть название на русском
-    public function getStatusMap(status){
-        return self::STATUS_MAP[status];
-    }
-    //  сюда надо параметр передавать?
-    public function getActionMap($action){
-        return self::ACTION_MAP[action];
-    }
-
     // карта доступных действий при статусах НОВОЕ и В РАБОТЕ
     const AVAILABLE_ACTIONS = [
         self::STATUS_NEW => [self::ACTION_CANCEL, self::ACTION_RESPOND],
         self::STATUS_INPROGRESS => [self::ACTION_COMPLETE, self::ACTION_REFUSE]
     ];
+    
+    // карта статусов
+    private const STATUS_MAP = [
+        self::STATUS_NEW        => 'Новое';
+        self::STATUS_CANCEL     => 'Отменено';
+        self::STATUS_INPROGRESS => 'В работе';
+        self::STATUS_COMPLETE   => 'Выполнено';
+        self::STATUS_FAILED     => 'Провалено';
+    ];
+    
+    // карта действий
+    private const ACTION_MAP = [
+        self::ACTION_CANCEL   => 'Отменить';
+        self::ACTION_RESPOND  => 'Откликнуться';
+        self::ACTION_COMPLETE => 'Принять';
+        self::ACTION_REFUSE   => 'Отказаться';
+    ];    
 
     // карта статусов после выполнения указанного действия
-    const GET_STATUS = [
-        // не уверена как сделать стутус NEW при создании задания
-        // может так?
-        self::ACTION_PUBLISH => self::STATUS_NEW,
-        self::ACTION_CANCEL => self::STATUS_CANCEL,
-
-        // не уверена насчет этого. "В работе - Заказчик выбрал исполнителя для задания"
-        self::ACTION_RESPOND => self::STATUS_INPROGRESS,
-
-        self::ACTION_REFUSE => self::STATUS_FAILED,
+    const STATUS_ACTION_RELATION = [
+        self::ACTION_CANCEL   => self::STATUS_CANCEL,
+        self::ACTION_REFUSE   => self::STATUS_FAILED,
         self::ACTION_COMPLETE => self::STATUS_COMPLETE
     ];
-
-    public function __construct($owner, $freelancer, $status ){
+    
+    public function __construct(int $owner, int $freelancer)
+    {
         $this->owner = $owner;
         $this->freelancer = $freelancer;
-        $this->status = $status;
+        $this->status = self::STATUS_NEW;
+    }
+    
+    // класс имеет методы для возврата «карты» статусов и действий.
+    public function getStatusMap(): array
+    {
+        return self::STATUS_MAP;
+    }
+    
+    public function getActionMap(): array
+    {
+        return self::ACTION_MAP;
     }
 
-    // метод для получения статуса, в которой он перейдёт после выполнения указанного действия
-    public function getStatus($action){
-        return self::GET_STATUS[$action];
+    // метод для получения статуса, в которое задание перейдёт после выполнения указанного действия
+    public function getStatus(string $action): ?string
+    {
+        return self::STATUS_ACTION_RELATION[$action] ?? null;
     }
 
     // метод для получения доступных действий для указанного статуса    
-    public function getAvailableActions($status){
-        return self::AVAILABLE_ACTIONS[$status];
+    public function getAvailableActions(string $status): ?string
+    {
+        return self::AVAILABLE_ACTIONS[$status] ?? null;
     }
 }
