@@ -1,10 +1,12 @@
 <?php
 
+namespace TaskForce\Models;
+
 class Task 
 {
-    private string $status;
-    private int    $owner;
-    private int    $freelancer;
+    private $status;
+    private $owner;
+    private $freelancer;
 
     // all possible states & actions
     const STATUS_NEW        = 'new';
@@ -26,19 +28,19 @@ class Task
     
     // карта статусов
     private const STATUS_MAP = [
-        self::STATUS_NEW        => 'Новое';
-        self::STATUS_CANCEL     => 'Отменено';
-        self::STATUS_INPROGRESS => 'В работе';
-        self::STATUS_COMPLETE   => 'Выполнено';
-        self::STATUS_FAILED     => 'Провалено';
+        self::STATUS_NEW        => 'Новое',
+        self::STATUS_CANCEL     => 'Отменено',
+        self::STATUS_INPROGRESS => 'В работе',
+        self::STATUS_COMPLETE   => 'Выполнено',
+        self::STATUS_FAILED     => 'Провалено'
     ];
     
     // карта действий
     private const ACTION_MAP = [
-        self::ACTION_CANCEL   => 'Отменить';
-        self::ACTION_RESPOND  => 'Откликнуться';
-        self::ACTION_COMPLETE => 'Принять';
-        self::ACTION_REFUSE   => 'Отказаться';
+        self::ACTION_CANCEL   => 'Отменить',
+        self::ACTION_RESPOND  => 'Откликнуться',
+        self::ACTION_COMPLETE => 'Принять',
+        self::ACTION_REFUSE   => 'Отказаться'
     ];    
 
     // карта статусов после выполнения указанного действия
